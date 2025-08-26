@@ -9,6 +9,7 @@ numbers_per_set = st.number_input("Amount of numbers per set",1,100)
 total_per_set = st.number_input("Expected sum of the numbers in the set",0,5050,45)
 min_number = st.number_input("Minimum number in range",1,100)
 max_number = st.number_input("Maximum number in range",9,100)
+overview_separator_char = st.text_input("Overview separator char","/",1)
 
 if 'calculate_clicked' not in st.session_state:
     st.session_state.calculate_clicked = False
@@ -20,6 +21,7 @@ st.button("Calculate", on_click=click_calculate)
 
 if st.session_state.calculate_clicked:
     TOTAL_COLUMN_NAME = "Total"
+    COMBINATION_COLUMN_NAME = "Combination"
     
     result = []
     
@@ -52,5 +54,26 @@ if st.session_state.calculate_clicked:
     
     st.header("Numbers occuring in the set(s)")
     st.dataframe(data, hide_index=True)
+    
+    overview = []
+
+    for set, total in sets:
+        overview_elements = ""
+        
+        for item in set:
+            if len(overview_elements) > 0:
+                overview_elements = overview_elements + f" {overview_separator_char} "
+            
+            overview_elements = overview_elements + str(item)
+        
+        overview.append((total, overview_elements))
+
+    overview_data = pd.DataFrame(overview)
+    
+    overview_column_config = {
+        "0" : TOTAL_COLUMN_NAME,
+        "1" : COMBINATION_COLUMN_NAME
+    }
+    
     st.header("Overview of the set(s)")
-    st.write(sets)
+    st.dataframe(overview_data, hide_index=True, column_config=overview_column_config)
