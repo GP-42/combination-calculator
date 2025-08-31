@@ -55,25 +55,46 @@ if st.session_state.calculate_clicked:
     st.header("Numbers occuring in the set(s)")
     st.dataframe(data, hide_index=True)
     
-    overview = []
+    # Overview as text
+    overview_text = []
 
     for set, total in sets:
-        overview_elements = ""
+        overview_text_elements = ""
         
         for item in set:
-            if len(overview_elements) > 0:
-                overview_elements = overview_elements + f" {overview_separator_char} "
+            if len(overview_text_elements) > 0:
+                overview_text_elements = overview_text_elements + f" {overview_separator_char} "
             
-            overview_elements = overview_elements + str(item)
+            overview_text_elements = overview_text_elements + str(item)
         
-        overview.append((total, overview_elements))
+        overview_text.append((total, overview_text_elements))
 
-    overview_data = pd.DataFrame(overview)
+    overview_text_data = pd.DataFrame(overview_text)
     
-    overview_column_config = {
+    overview_text_column_config = {
         "0" : TOTAL_COLUMN_NAME,
         "1" : COMBINATION_COLUMN_NAME
     }
+
+    # Overview as table
+    overview_table = []
+
+    for set, total in sets:
+        current = copy.deepcopy(row_template)
+        current[TOTAL_COLUMN_NAME] = total
+        
+        for item in set:
+            current[f"{item}"] = True
+        
+        overview_table.append(current)
+    
+    overview_table_data = pd.DataFrame(overview_table)
     
     st.header("Overview of the set(s)")
-    st.dataframe(overview_data, hide_index=True, column_config=overview_column_config)
+    tabText, tabTable = st.tabs(["Overview as text", "Overview as table"])
+    
+    with tabText:
+        st.dataframe(overview_text_data, hide_index=True, column_config=overview_text_column_config)
+    
+    with tabTable:
+        st.dataframe(overview_table_data, hide_index=True)
