@@ -1,4 +1,5 @@
 from FindSets import find_sets as fs
+from FilterDataframe import filter_dataframe as fd
 
 import copy
 import pandas as pd
@@ -9,7 +10,7 @@ numbers_per_set = st.number_input("Amount of numbers per set",1,100)
 total_per_set = st.number_input("Expected sum of the numbers in the set",0,5050,45)
 min_number = st.number_input("Minimum number in range",1,100)
 max_number = st.number_input("Maximum number in range",9,100)
-overview_separator_char = st.text_input("Overview separator char","/",1)
+overview_separator_char = st.text_input("Overview separator char","|",1)
 
 if 'calculate_clicked' not in st.session_state:
     st.session_state.calculate_clicked = False
@@ -40,9 +41,7 @@ if st.session_state.calculate_clicked:
     for total in distinct_totals:
         current = copy.deepcopy(row_template)
         current[TOTAL_COLUMN_NAME] = total
-        result.append(
-            current
-            )
+        result.append(current)
     
     data = pd.DataFrame(result)
     
@@ -69,12 +68,7 @@ if st.session_state.calculate_clicked:
         
         overview_text.append((total, overview_text_elements))
 
-    overview_text_data = pd.DataFrame(overview_text)
-    
-    overview_text_column_config = {
-        "0" : TOTAL_COLUMN_NAME,
-        "1" : COMBINATION_COLUMN_NAME
-    }
+    overview_text_data = pd.DataFrame(overview_text, columns=[TOTAL_COLUMN_NAME, COMBINATION_COLUMN_NAME])
 
     # Overview as table
     overview_table = []
@@ -94,7 +88,7 @@ if st.session_state.calculate_clicked:
     tabText, tabTable = st.tabs(["Overview as text", "Overview as table"])
     
     with tabText:
-        st.dataframe(overview_text_data, hide_index=True, column_config=overview_text_column_config)
+        st.dataframe(fd(overview_text_data, "text"), hide_index=True)
     
     with tabTable:
-        st.dataframe(overview_table_data, hide_index=True)
+        st.dataframe(fd(overview_table_data, "table"), hide_index=True)
