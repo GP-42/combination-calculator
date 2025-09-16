@@ -85,6 +85,7 @@ if st.session_state.calculate_clicked:
     overview_table_data = pd.DataFrame(overview_table)
     
     st.header("Overview of the set(s)")
+    st.write(f"**Count: {len(overview_text_data)}**")
     tabText, tabTable = st.tabs(["Overview as text", "Overview as table"])
     
     with tabText:
