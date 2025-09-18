@@ -20,6 +20,11 @@ def click_calculate():
 
 st.button("Calculate", on_click=click_calculate)
 
+def display_result_with_filter(overview_data: pd.DataFrame, overview: str):
+    filtered_data = fd(overview_data, overview)
+    st.write(f"**Filtered row count: {len(filtered_data)}**")
+    st.dataframe(filtered_data, hide_index=True)
+
 if st.session_state.calculate_clicked:
     TOTAL_COLUMN_NAME = "Total"
     COMBINATION_COLUMN_NAME = "Combination"
@@ -85,11 +90,11 @@ if st.session_state.calculate_clicked:
     overview_table_data = pd.DataFrame(overview_table)
     
     st.header("Overview of the set(s)")
-    st.write(f"**Count: {len(overview_text_data)}**")
+    st.write(f"**Total row count: {len(overview_text_data)}**")
     tabText, tabTable = st.tabs(["Overview as text", "Overview as table"])
     
     with tabText:
-        st.dataframe(fd(overview_text_data, "text"), hide_index=True)
+        display_result_with_filter(overview_text_data, "text")
     
     with tabTable:
-        st.dataframe(fd(overview_table_data, "table"), hide_index=True)
+        display_result_with_filter(overview_table_data, "table")
