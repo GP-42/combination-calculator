@@ -15,4 +15,4 @@ When there's no matching sum for the provided *Amount of numbers per set* and *E
 2. a set with the maximum sum for the provided *Amount of numbers per set*
 
 ## Value provided for the sum is within range
-All sets matching the provided *Expected sum of the numbers in the set* will be returned
+All sets matching the provided *Expected sum of the numbers in the set* will be returned.
